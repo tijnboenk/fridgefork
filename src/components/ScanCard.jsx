@@ -74,7 +74,9 @@ export default function ScanCard({ source, onScan, onRename, onRemove }) {
         )}
       </div>
 
-      <input ref={inputRef} type="file" accept="image/*" capture="environment" className="hidden"
+      {/* No `capture` attr: lets the phone offer "Take Photo" or "Photo Library".
+          Forcing capture would open the camera but block choosing an existing photo. */}
+      <input ref={inputRef} type="file" accept="image/*" className="hidden"
         onChange={e => onScan(e.target.files[0])} />
     </div>
   )
