@@ -1,8 +1,6 @@
-import { useRef } from 'react'
-
 export default function ScanCard({ source, onScan, onRename, onRemove }) {
-  const inputRef = useRef(null)
-  const { label, subtitle, preview, ingredients, loading, optional, removable, custom } = source
+  const { id, label, subtitle, preview, ingredients, loading, optional, removable, custom } = source
+  const inputId = `scan-input-${id}`
 
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
@@ -15,19 +13,17 @@ export default function ScanCard({ source, onScan, onRename, onRemove }) {
               {ingredients.length} items detected
             </span>
           )}
-          <button
-            onClick={() => inputRef.current?.click()}
-            disabled={loading}
-            className="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white transition-colors"
+          <label
+            htmlFor={inputId}
+            className="absolute bottom-3 right-3 bg-white/90 backdrop-blur text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-white transition-colors cursor-pointer"
           >
             Rescan
-          </button>
+          </label>
         </div>
       ) : (
-        <button
-          onClick={() => inputRef.current?.click()}
-          disabled={loading}
-          className="w-full h-32 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition-colors border-b border-gray-100"
+        <label
+          htmlFor={inputId}
+          className="w-full h-32 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition-colors border-b border-gray-100 cursor-pointer"
         >
           {loading ? (
             <svg className="animate-spin h-7 w-7 text-green-500" viewBox="0 0 24 24" fill="none">
@@ -38,7 +34,7 @@ export default function ScanCard({ source, onScan, onRename, onRemove }) {
             <div className="w-11 h-11 rounded-2xl bg-green-50 flex items-center justify-center text-2xl">📷</div>
           )}
           <span className="text-sm font-medium text-gray-500">{loading ? 'Analysing…' : 'Tap to scan'}</span>
-        </button>
+        </label>
       )}
 
       <div className="px-5 py-4 flex items-center justify-between gap-3">
@@ -74,10 +70,16 @@ export default function ScanCard({ source, onScan, onRename, onRemove }) {
         )}
       </div>
 
-      {/* No `capture` attr: lets the phone offer "Take Photo" or "Photo Library".
-          Forcing capture would open the camera but block choosing an existing photo. */}
-      <input ref={inputRef} type="file" accept="image/*" className="hidden"
-        onChange={e => onScan(e.target.files[0])} />
+      {/* Real <label htmlFor> above triggers this input natively — works on
+          iOS/Android where JS .click() on a hidden input is blocked.
+          sr-only keeps it accessible but visually hidden (not display:none). */}
+      <input
+        id={inputId}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={e => onScan(e.target.files[0])}
+      />
     </div>
   )
 }
