@@ -11,7 +11,7 @@ export default function App() {
   const [selectedMeal, setSelectedMeal] = useState(null)
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
+    <div className="min-h-screen bg-transparent px-4 py-8">
       {step === 'scan' && (
         <ScanStep onDone={items => { setIngredients(items); setStep('mealtype') }} />
       )}
