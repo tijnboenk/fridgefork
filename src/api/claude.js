@@ -11,11 +11,7 @@ async function post(path, body) {
   return data
 }
 
-export function scanFridge(base64, mediaType) {
-  return post('/api/scan', { base64, mediaType })
-}
-
-export function scanSpices(base64, mediaType) {
+export function scanPhoto(base64, mediaType) {
   return post('/api/scan', { base64, mediaType })
 }
 
